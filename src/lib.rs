@@ -32,38 +32,135 @@
 #![feature(const_fn)]
 #![no_std]
 
-use core::ops;
+use core::{mem, ops};
 
-/// An `ARRAY` aligned to `mem::align_of::<ALIGNMENT>`
-pub struct Aligned<ALIGNMENT, ARRAY> {
+/// An `ARRAY` aligned to `mem::align_of::<ALIGNMENT>()` bytes
+pub struct Aligned<ALIGNMENT, ARRAY>
+where
+    ARRAY: ?Sized,
+{
     _alignment: [ALIGNMENT; 0],
-    array: ARRAY,
+    /// The array
+    pub array: ARRAY,
 }
 
-impl<ALIGNMENT, ARRAY> ops::Deref for Aligned<ALIGNMENT, ARRAY> {
-    type Target = ARRAY;
+impl<T, ALIGNMENT> ops::Deref for Aligned<ALIGNMENT, [T]> {
+    type Target = [T];
 
-    fn deref(&self) -> &ARRAY {
-        &self.array
+    fn deref(&self) -> &Self::Target {
+        unsafe {
+            mem::transmute(self)
+        }
     }
 }
 
-impl<ALIGNMENT, ARRAY> ops::DerefMut for Aligned<ALIGNMENT, ARRAY> {
-    fn deref_mut(&mut self) -> &mut ARRAY {
-        &mut self.array
+impl<T, ALIGNMENT> ops::DerefMut for Aligned<ALIGNMENT, [T]> {
+    fn deref_mut(&mut self) -> &mut Self::Target {
+        unsafe {
+            mem::transmute(self)
+        }
     }
 }
+
+macro_rules! slice {
+    ($($N:expr),+) => {
+        $(
+            impl<T, ALIGNMENT> ops::Deref for Aligned<ALIGNMENT, [T; $N]> {
+                type Target = Aligned<ALIGNMENT, [T]>;
+
+                fn deref(&self) -> &Self::Target {
+                    unsafe {
+                        mem::transmute(&self.array[..])
+                    }
+                }
+            }
+
+            impl<T, ALIGNMENT> ops::DerefMut for Aligned<ALIGNMENT, [T; $N]> {
+                fn deref_mut(&mut self) -> &mut Self::Target {
+                    unsafe {
+                        mem::transmute(&mut self.array[..])
+                    }
+                }
+            }
+
+            impl<T, ALIGNMENT> ops::Index<ops::RangeTo<usize>>
+                for Aligned<ALIGNMENT, [T; $N]>
+            {
+                type Output = Aligned<ALIGNMENT, [T]>;
+
+                fn index(&self, range: ops::RangeTo<usize>) -> &Self::Output {
+                    unsafe {
+                        mem::transmute(self.array.index(range))
+                    }
+                }
+            }
+
+            impl<T, ALIGNMENT> ops::IndexMut<ops::RangeTo<usize>>
+                for Aligned<ALIGNMENT, [T; $N]>
+            {
+                fn index_mut(
+                    &mut self,
+                    range: ops::RangeTo<usize>,
+                ) -> &mut Self::Output {
+                    unsafe {
+                        mem::transmute(self.array.index_mut(range))
+                    }
+                }
+            }
+        )+
+    }
+}
+
+slice!(
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24,
+    25,
+    26,
+    27,
+    28,
+    29,
+    30,
+    31,
+    32,
+    64,
+    128,
+    256,
+    1024
+);
 
 /// IMPLEMENTATION DETAIL
 pub unsafe trait Alignment {}
 
-/// 16 bit alignment
+/// 2 byte alignment
 unsafe impl Alignment for u16 {}
 
-/// 32 bit alignment
+/// 4 byte alignment
 unsafe impl Alignment for u32 {}
 
-/// 64 bit alignment
+/// 8 byte alignment
 unsafe impl Alignment for u64 {}
 
 /// `Aligned` constructor
