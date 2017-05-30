@@ -1,0 +1,12 @@
+[package]
+authors = ["Jorge Aparicio <jorge@japaric.io>"]
+categories = ["embedded", "memory-management", "no-std"]
+description = "Statically allocated arrays with guaranteed memory alignments"
+documentation = "https://docs.rs/aligned"
+keywords = ["alignment", "aligned", "array"]
+license = "MIT OR Apache-2.0"
+name = "aligned"
+repository = "https://github.com/japaric/aligned"
+version = "0.1.0"
+
+[dependencies]
