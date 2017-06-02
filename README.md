@@ -1,3 +1,6 @@
+[![crates.io](https://img.shields.io/crates/v/aligned.svg)](https://crates.io/crates/aligned)
+[![crates.io](https://img.shields.io/crates/d/aligned.svg)](https://crates.io/crates/aligned)
+
 # `aligned`
 
 > Statically allocated arrays with guaranteed memory alignments
