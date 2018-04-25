@@ -5,6 +5,13 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+## [v0.1.2] - 2018-04-25
+
+### Added
+
+- an opt-out "const-fn" Cargo feature. Disabling this feature removes all `const` constructors and
+  makes this crate compilable on stable.
+
 ## [v0.1.1] - 2017-05-30
 
 ### Added
@@ -15,5 +22,6 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 - Initial release
 
-[Unreleased]: https://github.com/japaric/aligned/compare/v0.1.1...HEAD
+[Unreleased]: https://github.com/japaric/aligned/compare/v0.1.2...HEAD
+[v0.1.2]: https://github.com/japaric/aligned/compare/v0.1.1...v0.1.2
 [v0.1.1]: https://github.com/japaric/aligned/compare/v0.1.0...v0.1.1

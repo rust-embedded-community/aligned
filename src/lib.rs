@@ -29,7 +29,7 @@
 
 #![deny(missing_docs)]
 #![deny(warnings)]
-#![feature(const_fn)]
+#![cfg_attr(feature = "const-fn", feature(const_fn))]
 #![no_std]
 
 use core::{mem, ops};
@@ -165,10 +165,26 @@ unsafe impl Alignment for u64 {}
 
 /// `Aligned` constructor
 #[allow(non_snake_case)]
+#[cfg(feature = "const-fn")]
 pub const fn Aligned<ALIGNMENT, ARRAY>(
     array: ARRAY,
 ) -> Aligned<ALIGNMENT, ARRAY>
 where
+    ALIGNMENT: Alignment,
+{
+    Aligned {
+        _alignment: [],
+        array: array,
+    }
+}
+
+/// `Aligned` constructor
+#[allow(non_snake_case)]
+#[cfg(not(feature = "const-fn"))]
+pub fn Aligned<ALIGNMENT, ARRAY>(
+    array: ARRAY,
+) -> Aligned<ALIGNMENT, ARRAY>
+    where
     ALIGNMENT: Alignment,
 {
     Aligned {
