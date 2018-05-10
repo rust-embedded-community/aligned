@@ -7,8 +7,7 @@ keywords = ["alignment", "aligned", "array", "static"]
 license = "MIT OR Apache-2.0"
 name = "aligned"
 repository = "https://github.com/japaric/aligned"
-version = "0.1.2"
+version = "0.2.0"
 
 [features]
 const-fn = []
-default = ["const-fn"]
