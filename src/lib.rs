@@ -1,195 +1,113 @@
-//! Statically allocated arrays with guaranteed memory alignments
+//! A newtype with alignment of at least `A` bytes
 //!
 //! # Examples
 //!
 //! ```
-//! #![feature(const_fn)]
-//!
 //! use std::mem;
 //!
-//! use aligned::Aligned;
+//! use aligned::{Aligned, A2, A4, A16};
 //!
 //! // Array aligned to a 2 byte boundary
-//! static X: Aligned<u16, [u8; 3]> = Aligned([0; 3]);
+//! static X: Aligned<A2, [u8; 3]> = Aligned([0; 3]);
 //!
 //! // Array aligned to a 4 byte boundary
-//! static Y: Aligned<u32, [u8; 3]> = Aligned([0; 3]);
+//! static Y: Aligned<A4, [u8; 3]> = Aligned([0; 3]);
 //!
 //! // Unaligned array
 //! static Z: [u8; 3] = [0; 3];
 //!
 //! // You can allocate the aligned arrays on the stack too
-//! let w: Aligned<u64, _> = Aligned([0u8; 3]);
+//! let w: Aligned<A16, _> = Aligned([0u8; 3]);
 //!
 //! assert_eq!(mem::align_of_val(&X), 2);
 //! assert_eq!(mem::align_of_val(&Y), 4);
 //! assert_eq!(mem::align_of_val(&Z), 1);
-//! assert_eq!(mem::align_of_val(&w), 8);
+//! assert_eq!(mem::align_of_val(&w), 16);
 //! ```
 
 #![deny(missing_docs)]
 #![deny(warnings)]
-#![cfg_attr(feature = "const-fn", feature(const_fn))]
-#![no_std]
+#![cfg_attr(not(test), no_std)]
 
-use core::{mem, ops};
+use core::ops;
 
-/// An `ARRAY` aligned to `mem::align_of::<ALIGNMENT>()` bytes
-pub struct Aligned<ALIGNMENT, ARRAY>
+use as_slice::{AsMutSlice, AsSlice};
+
+mod sealed;
+
+/// 2-byte alignment
+#[repr(align(2))]
+pub struct A2;
+
+/// 4-byte alignment
+#[repr(align(4))]
+pub struct A4;
+
+/// 8-byte alignment
+#[repr(align(8))]
+pub struct A8;
+
+/// 16-byte alignment
+#[repr(align(16))]
+pub struct A16;
+
+/// A newtype with alignment of at least `A` bytes
+pub struct Aligned<A, T>
 where
-    ARRAY: ?Sized,
+    T: ?Sized,
 {
-    _alignment: [ALIGNMENT; 0],
-    /// The array
-    pub array: ARRAY,
+    _alignment: [A; 0],
+    value: T,
 }
 
-impl<T, ALIGNMENT> ops::Deref for Aligned<ALIGNMENT, [T]> {
-    type Target = [T];
-
-    fn deref(&self) -> &Self::Target {
-        unsafe {
-            mem::transmute(self)
-        }
-    }
-}
-
-impl<T, ALIGNMENT> ops::DerefMut for Aligned<ALIGNMENT, [T]> {
-    fn deref_mut(&mut self) -> &mut Self::Target {
-        unsafe {
-            mem::transmute(self)
-        }
-    }
-}
-
-macro_rules! slice {
-    ($($N:expr),+) => {
-        $(
-            impl<T, ALIGNMENT> ops::Deref for Aligned<ALIGNMENT, [T; $N]> {
-                type Target = Aligned<ALIGNMENT, [T]>;
-
-                fn deref(&self) -> &Self::Target {
-                    unsafe {
-                        mem::transmute(&self.array[..])
-                    }
-                }
-            }
-
-            impl<T, ALIGNMENT> ops::DerefMut for Aligned<ALIGNMENT, [T; $N]> {
-                fn deref_mut(&mut self) -> &mut Self::Target {
-                    unsafe {
-                        mem::transmute(&mut self.array[..])
-                    }
-                }
-            }
-
-            impl<T, ALIGNMENT> ops::Index<ops::RangeTo<usize>>
-                for Aligned<ALIGNMENT, [T; $N]>
-            {
-                type Output = Aligned<ALIGNMENT, [T]>;
-
-                fn index(&self, range: ops::RangeTo<usize>) -> &Self::Output {
-                    unsafe {
-                        mem::transmute(self.array.index(range))
-                    }
-                }
-            }
-
-            impl<T, ALIGNMENT> ops::IndexMut<ops::RangeTo<usize>>
-                for Aligned<ALIGNMENT, [T; $N]>
-            {
-                fn index_mut(
-                    &mut self,
-                    range: ops::RangeTo<usize>,
-                ) -> &mut Self::Output {
-                    unsafe {
-                        mem::transmute(self.array.index_mut(range))
-                    }
-                }
-            }
-        )+
-    }
-}
-
-slice!(
-    0,
-    1,
-    2,
-    3,
-    4,
-    5,
-    6,
-    7,
-    8,
-    9,
-    10,
-    11,
-    12,
-    13,
-    14,
-    15,
-    16,
-    17,
-    18,
-    19,
-    20,
-    21,
-    22,
-    23,
-    24,
-    25,
-    26,
-    27,
-    28,
-    29,
-    30,
-    31,
-    32,
-    64,
-    128,
-    256,
-    1024
-);
-
-/// IMPLEMENTATION DETAIL
-pub unsafe trait Alignment {}
-
-/// 2 byte alignment
-unsafe impl Alignment for u16 {}
-
-/// 4 byte alignment
-unsafe impl Alignment for u32 {}
-
-/// 8 byte alignment
-unsafe impl Alignment for u64 {}
-
-/// `Aligned` constructor
+/// Changes the alignment of `value` to be at least `A` bytes
 #[allow(non_snake_case)]
-#[cfg(feature = "const-fn")]
-pub const fn Aligned<ALIGNMENT, ARRAY>(
-    array: ARRAY,
-) -> Aligned<ALIGNMENT, ARRAY>
-where
-    ALIGNMENT: Alignment,
-{
+pub const fn Aligned<A, T>(value: T) -> Aligned<A, T> {
     Aligned {
         _alignment: [],
-        array: array,
+        value,
     }
 }
 
-/// `Aligned` constructor
-#[allow(non_snake_case)]
-#[cfg(not(feature = "const-fn"))]
-pub fn Aligned<ALIGNMENT, ARRAY>(
-    array: ARRAY,
-) -> Aligned<ALIGNMENT, ARRAY>
-    where
-    ALIGNMENT: Alignment,
+impl<A, T> ops::Deref for Aligned<A, T>
+where
+    A: sealed::Alignment,
 {
-    Aligned {
-        _alignment: [],
-        array: array,
+    type Target = T;
+
+    fn deref(&self) -> &T {
+        &self.value
+    }
+}
+
+impl<A, T> ops::DerefMut for Aligned<A, T>
+where
+    A: sealed::Alignment,
+{
+    fn deref_mut(&mut self) -> &mut T {
+        &mut self.value
+    }
+}
+
+impl<A, T> AsSlice for Aligned<A, T>
+where
+    A: sealed::Alignment,
+    T: AsSlice,
+{
+    type Element = T::Element;
+
+    fn as_slice(&self) -> &[T::Element] {
+        T::as_slice(&**self)
+    }
+}
+
+impl<A, T> AsMutSlice for Aligned<A, T>
+where
+    A: sealed::Alignment,
+    T: AsMutSlice,
+{
+    fn as_mut_slice(&mut self) -> &mut [T::Element] {
+        T::as_mut_slice(&mut **self)
     }
 }
 
@@ -197,15 +115,36 @@ pub fn Aligned<ALIGNMENT, ARRAY>(
 fn sanity() {
     use core::mem;
 
-    let x: Aligned<u16, _> = Aligned([0u8; 3]);
-    let y: Aligned<u32, _> = Aligned([0u8; 3]);
-    let z: Aligned<u64, _> = Aligned([0u8; 3]);
+    let x: Aligned<A2, _> = Aligned([0u8; 3]);
+    let y: Aligned<A4, _> = Aligned([0u8; 3]);
+    let z: Aligned<A8, _> = Aligned([0u8; 3]);
+    let w: Aligned<A16, _> = Aligned([0u8; 3]);
 
+    // check alignment
     assert_eq!(mem::align_of_val(&x), 2);
     assert_eq!(mem::align_of_val(&y), 4);
     assert_eq!(mem::align_of_val(&z), 8);
+    assert_eq!(mem::align_of_val(&w), 16);
 
     assert!(x.as_ptr() as usize % 2 == 0);
     assert!(y.as_ptr() as usize % 4 == 0);
     assert!(z.as_ptr() as usize % 8 == 0);
+    assert!(w.as_ptr() as usize % 16 == 0);
+
+    // test `deref`
+    assert_eq!(x.len(), 3);
+    assert_eq!(y.len(), 3);
+    assert_eq!(z.len(), 3);
+    assert_eq!(w.len(), 3);
+
+    // alignment should be preserved after boxing
+    let x: Box<Aligned<A2, [u8]>> = Box::new(Aligned([0u8; 3]));
+    let y: Box<Aligned<A4, [u8]>> = Box::new(Aligned([0u8; 3]));
+    let z: Box<Aligned<A8, [u8]>> = Box::new(Aligned([0u8; 3]));
+    let w: Box<Aligned<A16, [u8]>> = Box::new(Aligned([0u8; 3]));
+
+    assert_eq!(mem::align_of_val(&*x), 2);
+    assert_eq!(mem::align_of_val(&*y), 4);
+    assert_eq!(mem::align_of_val(&*z), 8);
+    assert_eq!(mem::align_of_val(&*w), 16);
 }
