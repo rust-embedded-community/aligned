@@ -3,7 +3,7 @@
 
 # `aligned`
 
-> Statically allocated arrays with guaranteed memory alignments
+> A newtype with alignment of at least `A` bytes
 
 ## License
 
