@@ -5,6 +5,18 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+## [v0.3.0] - 2018-11-05
+
+### Changed
+
+- [breaking-change] the alignment type parameter of `Aligned` must now be one
+  of: `A2`, `A4`, `A8` or `A16`.
+
+### Removed
+
+- [breaking-change] removed the `const-fn` feature. Const functions are now
+  provided by default. This crate now requires Rust 1.31+ to build.
+
 ## [v0.2.0] - 2018-05-10
 
 ### Changed
@@ -30,7 +42,8 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 - Initial release
 
-[Unreleased]: https://github.com/japaric/aligned/compare/v0.2.0...HEAD
+[Unreleased]: https://github.com/japaric/aligned/compare/v0.3.0...HEAD
+[v0.3.0]: https://github.com/japaric/aligned/compare/v0.2.0...v0.3.0
 [v0.2.0]: https://github.com/japaric/aligned/compare/v0.1.2...v0.2.0
 [v0.1.2]: https://github.com/japaric/aligned/compare/v0.1.1...v0.1.2
 [v0.1.1]: https://github.com/japaric/aligned/compare/v0.1.0...v0.1.1
