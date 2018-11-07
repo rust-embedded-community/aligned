@@ -5,6 +5,12 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+## [v0.3.1] - 2018-11-07
+
+### Changed
+
+- Make deref work on Aligned<Ax, $DST>.
+
 ## [v0.3.0] - 2018-11-05
 
 ### Changed
