@@ -72,6 +72,7 @@ pub const fn Aligned<A, T>(value: T) -> Aligned<A, T> {
 impl<A, T> ops::Deref for Aligned<A, T>
 where
     A: sealed::Alignment,
+    T: ?Sized,
 {
     type Target = T;
 
@@ -83,6 +84,7 @@ where
 impl<A, T> ops::DerefMut for Aligned<A, T>
 where
     A: sealed::Alignment,
+    T: ?Sized,
 {
     fn deref_mut(&mut self) -> &mut T {
         &mut self.value
@@ -147,4 +149,9 @@ fn sanity() {
     assert_eq!(mem::align_of_val(&*y), 4);
     assert_eq!(mem::align_of_val(&*z), 8);
     assert_eq!(mem::align_of_val(&*w), 16);
+
+    // test deref-ing
+    let x: Aligned<A2, _> = Aligned([0u8; 3]);
+    let y: &Aligned<A2, [u8]> = &x;
+    let _: &[u8] = y;
 }
