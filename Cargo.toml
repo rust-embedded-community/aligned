@@ -11,4 +11,4 @@ repository = "https://github.com/japaric/aligned"
 version = "0.3.1"
 
 [dependencies]
-as-slice = "0.1.0"
+as-slice = "0.2.0"
