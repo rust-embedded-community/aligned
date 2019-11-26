@@ -3,16 +3,8 @@ language: rust
 matrix:
   include:
     - env: TARGET=x86_64-unknown-linux-gnu
-      rust: beta
 
     - env: TARGET=thumbv7m-none-eabi
-      rust: beta
-
-    - env: TARGET=x86_64-unknown-linux-gnu
-      rust: nightly
-
-    - env: TARGET=thumbv7m-none-eabi
-      rust: nightly
 
 before_install: set -e
 
