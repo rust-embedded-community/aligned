@@ -91,6 +91,17 @@ where
     }
 }
 
+impl<A, T> ops::Index<ops::RangeTo<usize>> for Aligned<A, [T]>
+where
+    A: sealed::Alignment,
+{
+    type Output = Aligned<A, [T]>;
+
+    fn index(&self, range: ops::RangeTo<usize>) -> &Aligned<A, [T]> {
+        unsafe { &*(&self.value[range] as *const [T] as *const Aligned<A, [T]>) }
+    }
+}
+
 impl<A, T> AsSlice for Aligned<A, T>
 where
     A: sealed::Alignment,
@@ -139,6 +150,22 @@ fn sanity() {
     assert_eq!(z.len(), 3);
     assert_eq!(w.len(), 3);
 
+    // alignment should be preserved after slicing
+    let x: &Aligned<_, [_]> = &x;
+    let y: &Aligned<_, [_]> = &y;
+    let z: &Aligned<_, [_]> = &z;
+    let w: &Aligned<_, [_]> = &w;
+
+    let x: &Aligned<_, _> = &x[..2];
+    let y: &Aligned<_, _> = &y[..2];
+    let z: &Aligned<_, _> = &z[..2];
+    let w: &Aligned<_, _> = &w[..2];
+
+    assert!(x.as_ptr() as usize % 2 == 0);
+    assert!(y.as_ptr() as usize % 4 == 0);
+    assert!(z.as_ptr() as usize % 8 == 0);
+    assert!(w.as_ptr() as usize % 16 == 0);
+
     // alignment should be preserved after boxing
     let x: Box<Aligned<A2, [u8]>> = Box::new(Aligned([0u8; 3]));
     let y: Box<Aligned<A4, [u8]>> = Box::new(Aligned([0u8; 3]));
@@ -150,7 +177,7 @@ fn sanity() {
     assert_eq!(mem::align_of_val(&*z), 8);
     assert_eq!(mem::align_of_val(&*w), 16);
 
-    // test deref-ing
+    // test coercions
     let x: Aligned<A2, _> = Aligned([0u8; 3]);
     let y: &Aligned<A2, [u8]> = &x;
     let _: &[u8] = y;
