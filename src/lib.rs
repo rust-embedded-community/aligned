@@ -51,6 +51,10 @@ pub struct A8;
 #[repr(align(16))]
 pub struct A16;
 
+/// 32-byte alignment
+#[repr(align(32))]
+pub struct A32;
+
 /// A newtype with alignment of at least `A` bytes
 pub struct Aligned<A, T>
 where
@@ -132,50 +136,59 @@ fn sanity() {
     let y: Aligned<A4, _> = Aligned([0u8; 3]);
     let z: Aligned<A8, _> = Aligned([0u8; 3]);
     let w: Aligned<A16, _> = Aligned([0u8; 3]);
+    let v: Aligned<A32, _> = Aligned([0u8; 3]);
 
     // check alignment
     assert_eq!(mem::align_of_val(&x), 2);
     assert_eq!(mem::align_of_val(&y), 4);
     assert_eq!(mem::align_of_val(&z), 8);
     assert_eq!(mem::align_of_val(&w), 16);
+    assert_eq!(mem::align_of_val(&v), 32);
 
     assert!(x.as_ptr() as usize % 2 == 0);
     assert!(y.as_ptr() as usize % 4 == 0);
     assert!(z.as_ptr() as usize % 8 == 0);
     assert!(w.as_ptr() as usize % 16 == 0);
+    assert!(w.as_ptr() as usize % 32 == 0);
 
     // test `deref`
     assert_eq!(x.len(), 3);
     assert_eq!(y.len(), 3);
     assert_eq!(z.len(), 3);
     assert_eq!(w.len(), 3);
+    assert_eq!(v.len(), 3);
 
     // alignment should be preserved after slicing
     let x: &Aligned<_, [_]> = &x;
     let y: &Aligned<_, [_]> = &y;
     let z: &Aligned<_, [_]> = &z;
     let w: &Aligned<_, [_]> = &w;
+    let v: &Aligned<_, [_]> = &v;
 
     let x: &Aligned<_, _> = &x[..2];
     let y: &Aligned<_, _> = &y[..2];
     let z: &Aligned<_, _> = &z[..2];
     let w: &Aligned<_, _> = &w[..2];
+    let v: &Aligned<_, _> = &v[..2];
 
     assert!(x.as_ptr() as usize % 2 == 0);
     assert!(y.as_ptr() as usize % 4 == 0);
     assert!(z.as_ptr() as usize % 8 == 0);
     assert!(w.as_ptr() as usize % 16 == 0);
+    assert!(v.as_ptr() as usize % 32 == 0);
 
     // alignment should be preserved after boxing
     let x: Box<Aligned<A2, [u8]>> = Box::new(Aligned([0u8; 3]));
     let y: Box<Aligned<A4, [u8]>> = Box::new(Aligned([0u8; 3]));
     let z: Box<Aligned<A8, [u8]>> = Box::new(Aligned([0u8; 3]));
     let w: Box<Aligned<A16, [u8]>> = Box::new(Aligned([0u8; 3]));
+    let v: Box<Aligned<A32, [u8]>> = Box::new(Aligned([0u8; 3]));
 
     assert_eq!(mem::align_of_val(&*x), 2);
     assert_eq!(mem::align_of_val(&*y), 4);
     assert_eq!(mem::align_of_val(&*z), 8);
     assert_eq!(mem::align_of_val(&*w), 16);
+    assert_eq!(mem::align_of_val(&*v), 32);
 
     // test coercions
     let x: Aligned<A2, _> = Aligned([0u8; 3]);
