@@ -138,6 +138,19 @@ where
     }
 }
 
+impl<A, T> Default for Aligned<A, T>
+where
+    A: sealed::Alignment,
+    T: Default,
+{
+    fn default() -> Self {
+        Self {
+            _alignment: [],
+            value: Default::default(),
+        }
+    }
+}
+
 impl<A, T> Debug for Aligned<A, T>
 where
     A: sealed::Alignment,
