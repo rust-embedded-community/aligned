@@ -29,6 +29,7 @@
 #![deny(warnings)]
 #![cfg_attr(not(test), no_std)]
 
+use core::fmt::{Display, Debug};
 use core::ops;
 
 use as_slice::{AsMutSlice, AsSlice};
@@ -121,6 +122,39 @@ where
 {
     fn as_mut_slice(&mut self) -> &mut [T::Element] {
         T::as_mut_slice(&mut **self)
+    }
+}
+
+impl<A, T> Clone for Aligned<A, T>
+where
+    A: sealed::Alignment,
+    T: Clone,
+{
+    fn clone(&self) -> Self {
+        Self {
+            _alignment: [],
+            value: self.value.clone(),
+        }
+    }
+}
+
+impl<A, T> Debug for Aligned<A, T>
+where
+    A: sealed::Alignment,
+    T: Debug,
+{
+    fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
+        self.value.fmt(f)
+    }
+}
+
+impl<A, T> Display for Aligned<A, T>
+where
+    A: sealed::Alignment,
+    T: Display,
+{
+    fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
+        self.value.fmt(f)
     }
 }
 
