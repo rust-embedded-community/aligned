@@ -5,6 +5,13 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+## [v0.3.3] - 2020-07-28
+
+### Added
+
+- `Aligned` now implements the `Clone`, `Default`, `Debug` and `Display` traits.
+- `Aligned` has been marked `repr(C)`
+
 ## [v0.3.2] - 2019-11-26
 
 ### Added
@@ -55,7 +62,8 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 - Initial release
 
-[Unreleased]: https://github.com/japaric/aligned/compare/v0.3.2...HEAD
+[Unreleased]: https://github.com/japaric/aligned/compare/v0.3.3...HEAD
+[v0.3.3]: https://github.com/japaric/aligned/compare/v0.3.2...v0.3.3
 [v0.3.2]: https://github.com/japaric/aligned/compare/v0.3.1...v0.3.2
 [v0.3.1]: https://github.com/japaric/aligned/compare/v0.3.0...v0.3.1
 [v0.3.0]: https://github.com/japaric/aligned/compare/v0.2.0...v0.3.0
