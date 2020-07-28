@@ -53,6 +53,7 @@ pub struct A8;
 pub struct A16;
 
 /// A newtype with alignment of at least `A` bytes
+#[repr(C)]
 pub struct Aligned<A, T>
 where
     T: ?Sized,
