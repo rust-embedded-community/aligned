@@ -29,8 +29,7 @@
 #![deny(warnings)]
 #![cfg_attr(not(test), no_std)]
 
-use core::fmt::{Display, Debug};
-use core::ops;
+use core::{cmp::Ordering, fmt::{Display, Debug}, hash::{Hash, Hasher}, ops};
 
 use as_slice::{AsMutSlice, AsSlice};
 
@@ -169,6 +168,52 @@ where
 {
     fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
         self.value.fmt(f)
+    }
+}
+
+impl<A, T> PartialEq for Aligned<A, T>
+where
+    A: sealed::Alignment,
+    T: PartialEq,
+{
+    fn eq(&self, other: &Self) -> bool {
+        self.value == other.value
+    }
+}
+
+impl<A, T> Eq for Aligned<A, T>
+where
+    A: sealed::Alignment,
+    T: Eq,
+{}
+
+impl<A, T> Hash for Aligned<A, T>
+where
+    A: sealed::Alignment,
+    T: Hash,
+{
+    fn hash<H: Hasher>(&self, state: &mut H) {
+        self.value.hash(state);
+    }
+}
+
+impl<A, T> Ord for Aligned<A, T>
+where
+    A: sealed::Alignment,
+    T: Ord,
+{
+    fn cmp(&self, other: &Self) -> Ordering {
+        self.value.cmp(&other.value)
+    }
+}
+
+impl<A, T> PartialOrd for Aligned<A, T>
+where
+    A: sealed::Alignment,
+    T: PartialOrd,
+{
+    fn partial_cmp(&self, other: &Self) -> Option<Ordering> {
+        self.value.partial_cmp(&other.value)
     }
 }
 
