@@ -5,6 +5,12 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+## [v0.3.4] - 2020-07-31
+
+### Added
+
+- `Aligned` now implements the `PartialEq`, `Eq`, `PartialOrd`, `Ord` and `Hash` traits.
+
 ## [v0.3.3] - 2020-07-28
 
 ### Added
@@ -62,7 +68,8 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 - Initial release
 
-[Unreleased]: https://github.com/japaric/aligned/compare/v0.3.3...HEAD
+[Unreleased]: https://github.com/japaric/aligned/compare/v0.3.4...HEAD
+[v0.3.4]: https://github.com/japaric/aligned/compare/v0.3.3...v0.3.4
 [v0.3.3]: https://github.com/japaric/aligned/compare/v0.3.2...v0.3.3
 [v0.3.2]: https://github.com/japaric/aligned/compare/v0.3.1...v0.3.2
 [v0.3.1]: https://github.com/japaric/aligned/compare/v0.3.0...v0.3.1
