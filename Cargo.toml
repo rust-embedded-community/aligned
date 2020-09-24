@@ -12,3 +12,5 @@ version = "0.3.4"
 
 [dependencies]
 as-slice = "0.1.0"
+generic-array = { version = "0.14", default-features = false }
+subtle = { version = "2", default-features = false, features = ["nightly"], optional = true }

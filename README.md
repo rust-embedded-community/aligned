@@ -5,6 +5,10 @@
 
 > A newtype with alignment of at least `A` bytes
 
+There is some extra integration in this crate with the `generic_array` crate,
+and some API features that allow to safely manipulate aligned arrays in a zero-cost
+way *without losing alignment information*.
+
 ## License
 
 Licensed under either of
