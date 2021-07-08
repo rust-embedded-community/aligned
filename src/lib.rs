@@ -51,6 +51,14 @@ pub struct A8;
 #[repr(align(16))]
 pub struct A16;
 
+/// 32-byte alignment
+#[repr(align(32))]
+pub struct A32;
+
+/// 64-byte alignment
+#[repr(align(64))]
+pub struct A64;
+
 /// A newtype with alignment of at least `A` bytes
 #[repr(C)]
 pub struct Aligned<A, T>
