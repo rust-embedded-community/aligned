@@ -5,6 +5,8 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+## [v0.3.5] - 2021-07-17
+
 - added `A32` and `A64` types
 
 ## [v0.3.4] - 2020-07-31
