@@ -5,6 +5,16 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+## [v0.4.0] - 2021-07-24
+
+### Changed
+
+- `as-slice` dependency bumped to 0.2.0
+
+### Removed
+
+- [breaking-change] removed compatibility withe version 0.1.0 of `AsSlice` and `AsMutSlice` traits (`as-slice` crate)
+
 ## [v0.3.5] - 2021-07-17
 
 - added `A32` and `A64` types
