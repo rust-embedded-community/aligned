@@ -29,33 +29,44 @@
 #![deny(warnings)]
 #![cfg_attr(not(test), no_std)]
 
-use core::{cmp::Ordering, fmt::{Display, Debug}, hash::{Hash, Hasher}, ops};
+use core::{
+    cmp::Ordering,
+    fmt::{Debug, Display},
+    hash::{Hash, Hasher},
+    ops,
+};
 
 use as_slice::{AsMutSlice, AsSlice};
 
 mod sealed;
 
 /// 2-byte alignment
+#[derive(Clone, Copy)]
 #[repr(align(2))]
 pub struct A2;
 
 /// 4-byte alignment
+#[derive(Clone, Copy)]
 #[repr(align(4))]
 pub struct A4;
 
 /// 8-byte alignment
+#[derive(Clone, Copy)]
 #[repr(align(8))]
 pub struct A8;
 
 /// 16-byte alignment
+#[derive(Clone, Copy)]
 #[repr(align(16))]
 pub struct A16;
 
 /// 32-byte alignment
+#[derive(Clone, Copy)]
 #[repr(align(32))]
 pub struct A32;
 
 /// 64-byte alignment
+#[derive(Clone, Copy)]
 #[repr(align(64))]
 pub struct A64;
 
@@ -146,6 +157,13 @@ where
     }
 }
 
+impl<A, T> Copy for Aligned<A, T>
+where
+    A: sealed::Alignment,
+    T: Copy,
+{
+}
+
 impl<A, T> Default for Aligned<A, T>
 where
     A: sealed::Alignment,
@@ -193,7 +211,8 @@ impl<A, T> Eq for Aligned<A, T>
 where
     A: sealed::Alignment,
     T: Eq,
-{}
+{
+}
 
 impl<A, T> Hash for Aligned<A, T>
 where

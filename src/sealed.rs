@@ -1,4 +1,4 @@
-pub trait Alignment {}
+pub trait Alignment: Copy {}
 
 impl Alignment for super::A2 {}
 impl Alignment for super::A4 {}
