@@ -5,6 +5,18 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+### Added
+
+### Changed
+
+### Removed
+
+## [v0.4.1] - 2022-05-m3
+
+### Added
+
+- `Aligned<A, T>` implements `Copy` if `T` implements `Copy`
+
 ## [v0.4.0] - 2021-07-24
 
 ### Changed
@@ -82,7 +94,10 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 - Initial release
 
-[Unreleased]: https://github.com/japaric/aligned/compare/v0.3.4...HEAD
+[Unreleased]: https://github.com/japaric/aligned/compare/v0.4.1...HEAD
+[v0.4.1]: https://github.com/japaric/aligned/compare/v0.4.0...v0.4.1
+[v0.4.0]: https://github.com/japaric/aligned/compare/v0.3.5...v0.4.0
+[v0.3.5]: https://github.com/japaric/aligned/compare/v0.3.4...v0.3.5
 [v0.3.4]: https://github.com/japaric/aligned/compare/v0.3.3...v0.3.4
 [v0.3.3]: https://github.com/japaric/aligned/compare/v0.3.2...v0.3.3
 [v0.3.2]: https://github.com/japaric/aligned/compare/v0.3.1...v0.3.2
