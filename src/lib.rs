@@ -30,6 +30,7 @@
 #![cfg_attr(not(test), no_std)]
 
 use core::{
+    borrow::{Borrow, BorrowMut},
     cmp::Ordering,
     fmt::{Debug, Display},
     hash::{Hash, Hasher},
@@ -141,6 +142,26 @@ where
 {
     fn as_mut_slice(&mut self) -> &mut [T::Element] {
         T::as_mut_slice(&mut **self)
+    }
+}
+
+impl<A, T> Borrow<[<Aligned<A, T> as AsSlice>::Element]> for Aligned<A, T>
+where
+    A: sealed::Alignment,
+    Aligned<A, T>: AsSlice,
+{
+    fn borrow(&self) -> &[<Aligned<A, T> as AsSlice>::Element] {
+        self.as_slice()
+    }
+}
+
+impl<A, T> BorrowMut<[<Aligned<A, T> as AsSlice>::Element]> for Aligned<A, T>
+where
+    A: sealed::Alignment,
+    Aligned<A, T>: AsMutSlice,
+{
+    fn borrow_mut(&mut self) -> &mut [<Aligned<A, T> as AsSlice>::Element] {
+        self.as_mut_slice()
     }
 }
 
