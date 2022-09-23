@@ -145,6 +145,24 @@ where
     }
 }
 
+impl<A, T> Borrow<T> for Aligned<A, T>
+where
+    A: sealed::Alignment
+{
+    fn borrow(&self) -> &T {
+        &self.value
+    }
+}
+
+impl<A, T> BorrowMut<T> for Aligned<A, T>
+where
+    A: sealed::Alignment
+{
+    fn borrow_mut(&mut self) -> &mut T {
+        &mut self.value
+    }
+}
+
 impl<A, T> Borrow<[<Aligned<A, T> as AsSlice>::Element]> for Aligned<A, T>
 where
     A: sealed::Alignment,
