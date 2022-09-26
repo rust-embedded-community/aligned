@@ -147,7 +147,7 @@ where
 
 impl<A, T> Borrow<T> for Aligned<A, T>
 where
-    A: sealed::Alignment
+    A: sealed::Alignment,
 {
     fn borrow(&self) -> &T {
         &self.value
@@ -156,7 +156,7 @@ where
 
 impl<A, T> BorrowMut<T> for Aligned<A, T>
 where
-    A: sealed::Alignment
+    A: sealed::Alignment,
 {
     fn borrow_mut(&mut self) -> &mut T {
         &mut self.value
