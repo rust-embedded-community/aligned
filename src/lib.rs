@@ -41,6 +41,7 @@ use as_slice::{AsMutSlice, AsSlice};
 /// A marker trait for an alignment value.
 pub trait Alignment: Copy + sealed::Sealed {}
 
+impl Alignment for A1 {}
 impl Alignment for A2 {}
 impl Alignment for A4 {}
 impl Alignment for A8 {}
@@ -51,6 +52,7 @@ impl Alignment for A64 {}
 mod sealed {
     pub trait Sealed {}
 
+    impl Sealed for super::A1 {}
     impl Sealed for super::A2 {}
     impl Sealed for super::A4 {}
     impl Sealed for super::A8 {}
@@ -58,6 +60,11 @@ mod sealed {
     impl Sealed for super::A32 {}
     impl Sealed for super::A64 {}
 }
+
+/// 1-byte alignment
+#[derive(Clone, Copy)]
+#[repr(align(1))]
+pub struct A1;
 
 /// 2-byte alignment
 #[derive(Clone, Copy)]
@@ -267,50 +274,59 @@ where
 fn sanity() {
     use core::mem;
 
+    let a: Aligned<A1, _> = Aligned([0u8; 3]);
     let x: Aligned<A2, _> = Aligned([0u8; 3]);
     let y: Aligned<A4, _> = Aligned([0u8; 3]);
     let z: Aligned<A8, _> = Aligned([0u8; 3]);
     let w: Aligned<A16, _> = Aligned([0u8; 3]);
 
     // check alignment
+    assert_eq!(mem::align_of_val(&a), 1);
     assert_eq!(mem::align_of_val(&x), 2);
     assert_eq!(mem::align_of_val(&y), 4);
     assert_eq!(mem::align_of_val(&z), 8);
     assert_eq!(mem::align_of_val(&w), 16);
 
+    assert!(a.as_ptr() as usize % 1 == 0);
     assert!(x.as_ptr() as usize % 2 == 0);
     assert!(y.as_ptr() as usize % 4 == 0);
     assert!(z.as_ptr() as usize % 8 == 0);
     assert!(w.as_ptr() as usize % 16 == 0);
 
     // test `deref`
+    assert_eq!(a.len(), 3);
     assert_eq!(x.len(), 3);
     assert_eq!(y.len(), 3);
     assert_eq!(z.len(), 3);
     assert_eq!(w.len(), 3);
 
     // alignment should be preserved after slicing
+    let a: &Aligned<_, [_]> = &a;
     let x: &Aligned<_, [_]> = &x;
     let y: &Aligned<_, [_]> = &y;
     let z: &Aligned<_, [_]> = &z;
     let w: &Aligned<_, [_]> = &w;
 
+    let a: &Aligned<_, _> = &a[..2];
     let x: &Aligned<_, _> = &x[..2];
     let y: &Aligned<_, _> = &y[..2];
     let z: &Aligned<_, _> = &z[..2];
     let w: &Aligned<_, _> = &w[..2];
 
+    assert!(a.as_ptr() as usize % 1 == 0);
     assert!(x.as_ptr() as usize % 2 == 0);
     assert!(y.as_ptr() as usize % 4 == 0);
     assert!(z.as_ptr() as usize % 8 == 0);
     assert!(w.as_ptr() as usize % 16 == 0);
 
     // alignment should be preserved after boxing
+    let a: Box<Aligned<A1, [u8]>> = Box::new(Aligned([0u8; 3]));
     let x: Box<Aligned<A2, [u8]>> = Box::new(Aligned([0u8; 3]));
     let y: Box<Aligned<A4, [u8]>> = Box::new(Aligned([0u8; 3]));
     let z: Box<Aligned<A8, [u8]>> = Box::new(Aligned([0u8; 3]));
     let w: Box<Aligned<A16, [u8]>> = Box::new(Aligned([0u8; 3]));
 
+    assert_eq!(mem::align_of_val(&*a), 1);
     assert_eq!(mem::align_of_val(&*x), 2);
     assert_eq!(mem::align_of_val(&*y), 4);
     assert_eq!(mem::align_of_val(&*z), 8);
