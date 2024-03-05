@@ -38,7 +38,26 @@ use core::{
 
 use as_slice::{AsMutSlice, AsSlice};
 
-mod sealed;
+/// A marker trait for an alignment value.
+pub trait Alignment: Copy + sealed::Sealed {}
+
+impl Alignment for A2 {}
+impl Alignment for A4 {}
+impl Alignment for A8 {}
+impl Alignment for A16 {}
+impl Alignment for A32 {}
+impl Alignment for A64 {}
+
+mod sealed {
+    pub trait Sealed {}
+
+    impl Sealed for super::A2 {}
+    impl Sealed for super::A4 {}
+    impl Sealed for super::A8 {}
+    impl Sealed for super::A16 {}
+    impl Sealed for super::A32 {}
+    impl Sealed for super::A64 {}
+}
 
 /// 2-byte alignment
 #[derive(Clone, Copy)]
@@ -91,7 +110,7 @@ pub const fn Aligned<A, T>(value: T) -> Aligned<A, T> {
 
 impl<A, T> ops::Deref for Aligned<A, T>
 where
-    A: sealed::Alignment,
+    A: Alignment,
     T: ?Sized,
 {
     type Target = T;
@@ -103,7 +122,7 @@ where
 
 impl<A, T> ops::DerefMut for Aligned<A, T>
 where
-    A: sealed::Alignment,
+    A: Alignment,
     T: ?Sized,
 {
     fn deref_mut(&mut self) -> &mut T {
@@ -113,7 +132,7 @@ where
 
 impl<A, T> ops::Index<ops::RangeTo<usize>> for Aligned<A, [T]>
 where
-    A: sealed::Alignment,
+    A: Alignment,
 {
     type Output = Aligned<A, [T]>;
 
@@ -124,7 +143,7 @@ where
 
 impl<A, T> AsSlice for Aligned<A, T>
 where
-    A: sealed::Alignment,
+    A: Alignment,
     T: AsSlice,
 {
     type Element = T::Element;
@@ -136,7 +155,7 @@ where
 
 impl<A, T> AsMutSlice for Aligned<A, T>
 where
-    A: sealed::Alignment,
+    A: Alignment,
     T: AsMutSlice,
 {
     fn as_mut_slice(&mut self) -> &mut [T::Element] {
@@ -146,7 +165,7 @@ where
 
 impl<A, T> Clone for Aligned<A, T>
 where
-    A: sealed::Alignment,
+    A: Alignment,
     T: Clone,
 {
     fn clone(&self) -> Self {
@@ -159,14 +178,14 @@ where
 
 impl<A, T> Copy for Aligned<A, T>
 where
-    A: sealed::Alignment,
+    A: Alignment,
     T: Copy,
 {
 }
 
 impl<A, T> Default for Aligned<A, T>
 where
-    A: sealed::Alignment,
+    A: Alignment,
     T: Default,
 {
     fn default() -> Self {
@@ -179,7 +198,7 @@ where
 
 impl<A, T> Debug for Aligned<A, T>
 where
-    A: sealed::Alignment,
+    A: Alignment,
     T: Debug,
 {
     fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
@@ -189,7 +208,7 @@ where
 
 impl<A, T> Display for Aligned<A, T>
 where
-    A: sealed::Alignment,
+    A: Alignment,
     T: Display,
 {
     fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
@@ -199,7 +218,7 @@ where
 
 impl<A, T> PartialEq for Aligned<A, T>
 where
-    A: sealed::Alignment,
+    A: Alignment,
     T: PartialEq,
 {
     fn eq(&self, other: &Self) -> bool {
@@ -209,14 +228,14 @@ where
 
 impl<A, T> Eq for Aligned<A, T>
 where
-    A: sealed::Alignment,
+    A: Alignment,
     T: Eq,
 {
 }
 
 impl<A, T> Hash for Aligned<A, T>
 where
-    A: sealed::Alignment,
+    A: Alignment,
     T: Hash,
 {
     fn hash<H: Hasher>(&self, state: &mut H) {
@@ -226,7 +245,7 @@ where
 
 impl<A, T> Ord for Aligned<A, T>
 where
-    A: sealed::Alignment,
+    A: Alignment,
     T: Ord,
 {
     fn cmp(&self, other: &Self) -> Ordering {
@@ -236,7 +255,7 @@ where
 
 impl<A, T> PartialOrd for Aligned<A, T>
 where
-    A: sealed::Alignment,
+    A: Alignment,
     T: PartialOrd,
 {
     fn partial_cmp(&self, other: &Self) -> Option<Ordering> {
