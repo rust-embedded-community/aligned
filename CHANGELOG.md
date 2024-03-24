@@ -11,7 +11,19 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Removed
 
-## [v0.4.1] - 2022-05-m3
+## [v0.4.2] - 2024-03-24
+
+### Added
+
+- Add `A1` type
+- Make the `Alignment` trait public, but unimplementable
+- Add some `Borrow`/`BorrowMut` trait impls
+
+### Changed
+
+### Removed
+
+## [v0.4.1] - 2022-05-30
 
 ### Added
 
