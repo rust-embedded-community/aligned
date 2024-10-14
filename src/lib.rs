@@ -107,6 +107,24 @@ where
     value: T,
 }
 
+impl<A, T> Aligned<A, T>
+where
+    A: Alignment,
+    T: ?Sized,
+{
+    /// Gets a mutable pointer to the wrapped value.
+    pub const fn get(this: &Self) -> *mut T {
+        &this.value as *const T as *mut T
+    }
+
+    /// Gets a mutable pointer to the wrapped value.
+    /// The difference from get is that this function accepts a raw pointer,
+    /// which is useful to avoid the creation of temporary references.
+    pub const fn raw_get(this: *const Self) -> *mut T {
+        unsafe { &(*this).value as *const T as *mut T }
+    }
+}
+
 /// Changes the alignment of `value` to be at least `A` bytes
 #[allow(non_snake_case)]
 pub const fn Aligned<A, T>(value: T) -> Aligned<A, T> {
@@ -331,6 +349,18 @@ fn sanity() {
     assert!(y.as_ptr() as usize % 4 == 0);
     assert!(z.as_ptr() as usize % 8 == 0);
     assert!(w.as_ptr() as usize % 16 == 0);
+
+    // test pointer getters
+    assert_eq!(Aligned::get(&a) as *const _, a.as_ptr());
+    assert_eq!(Aligned::get(&x) as *const _, x.as_ptr());
+    assert_eq!(Aligned::get(&y) as *const _, y.as_ptr());
+    assert_eq!(Aligned::get(&z) as *const _, z.as_ptr());
+    assert_eq!(Aligned::get(&w) as *const _, w.as_ptr());
+    assert_eq!(Aligned::raw_get(&a as *const _) as *const _, a.as_ptr());
+    assert_eq!(Aligned::raw_get(&x as *const _) as *const _, x.as_ptr());
+    assert_eq!(Aligned::raw_get(&y as *const _) as *const _, y.as_ptr());
+    assert_eq!(Aligned::raw_get(&z as *const _) as *const _, z.as_ptr());
+    assert_eq!(Aligned::raw_get(&w as *const _) as *const _, w.as_ptr());
 
     // test `deref`
     assert_eq!(a.len(), 3);
