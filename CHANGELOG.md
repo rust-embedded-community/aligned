@@ -7,6 +7,8 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Added
 
+- Support indexing with most core::ops::Range* types.
+
 ### Changed
 
 ### Removed
