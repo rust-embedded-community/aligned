@@ -398,7 +398,7 @@ where
     }
 }
 
-impl<A, T> Debug for Aligned<A, T>
+impl<A, T: ?Sized> Debug for Aligned<A, T>
 where
     A: Alignment,
     T: Debug,
@@ -408,7 +408,7 @@ where
     }
 }
 
-impl<A, T> Display for Aligned<A, T>
+impl<A, T: ?Sized> Display for Aligned<A, T>
 where
     A: Alignment,
     T: Display,
@@ -418,7 +418,7 @@ where
     }
 }
 
-impl<A, T> PartialEq for Aligned<A, T>
+impl<A, T: ?Sized> PartialEq for Aligned<A, T>
 where
     A: Alignment,
     T: PartialEq,
@@ -428,14 +428,14 @@ where
     }
 }
 
-impl<A, T> Eq for Aligned<A, T>
+impl<A, T: ?Sized> Eq for Aligned<A, T>
 where
     A: Alignment,
     T: Eq,
 {
 }
 
-impl<A, T> Hash for Aligned<A, T>
+impl<A, T: ?Sized> Hash for Aligned<A, T>
 where
     A: Alignment,
     T: Hash,
@@ -445,7 +445,7 @@ where
     }
 }
 
-impl<A, T> Ord for Aligned<A, T>
+impl<A, T: ?Sized> Ord for Aligned<A, T>
 where
     A: Alignment,
     T: Ord,
@@ -455,7 +455,7 @@ where
     }
 }
 
-impl<A, T> PartialOrd for Aligned<A, T>
+impl<A, T: ?Sized> PartialOrd for Aligned<A, T>
 where
     A: Alignment,
     T: PartialOrd,
