@@ -159,11 +159,13 @@ impl<A, T> Aligned<A, [T]>
 where
     A: Alignment,
 {
+    #[inline(always)]
     fn is_index_aligned(index: usize) -> bool {
         use core::mem::size_of;
 
         (index * size_of::<T>()) % A::ALIGN == 0
     }
+    #[inline(always)]
     fn check_start_index(index: usize) {
         if !Self::is_index_aligned(index) {
             panic!("Unaligned start index");
@@ -177,6 +179,7 @@ where
 {
     type Output = Aligned<A, [T]>;
 
+    #[inline(always)]
     fn index(&self, range: ops::RangeFrom<usize>) -> &Aligned<A, [T]> {
         Self::check_start_index(range.start);
         unsafe { &*(&self.value[range] as *const [T] as *const Aligned<A, [T]>) }
@@ -211,6 +214,7 @@ where
 {
     type Output = Aligned<A, [T]>;
 
+    #[inline(always)]
     fn index(&self, range: ops::RangeInclusive<usize>) -> &Aligned<A, [T]> {
         Self::check_start_index(*range.start());
         unsafe { &*(&self.value[range] as *const [T] as *const Aligned<A, [T]>) }
@@ -223,6 +227,7 @@ where
 {
     type Output = Aligned<A, [T]>;
 
+    #[inline(always)]
     fn index(&self, range: ops::Range<usize>) -> &Aligned<A, [T]> {
         Self::check_start_index(range.start);
         unsafe { &*(&self.value[range] as *const [T] as *const Aligned<A, [T]>) }
@@ -244,6 +249,7 @@ impl<A, T> ops::IndexMut<ops::RangeFrom<usize>> for Aligned<A, [T]>
 where
     A: Alignment,
 {
+    #[inline(always)]
     fn index_mut(&mut self, range: ops::RangeFrom<usize>) -> &mut Aligned<A, [T]> {
         Self::check_start_index(range.start);
         unsafe { &mut *(&mut self.value[range] as *mut [T] as *mut Aligned<A, [T]>) }
@@ -272,6 +278,7 @@ impl<A, T> ops::IndexMut<ops::RangeInclusive<usize>> for Aligned<A, [T]>
 where
     A: Alignment,
 {
+    #[inline(always)]
     fn index_mut(&mut self, range: ops::RangeInclusive<usize>) -> &mut Aligned<A, [T]> {
         Self::check_start_index(*range.start());
         unsafe { &mut *(&mut self.value[range] as *mut [T] as *mut Aligned<A, [T]>) }
@@ -282,6 +289,7 @@ impl<A, T> ops::IndexMut<ops::Range<usize>> for Aligned<A, [T]>
 where
     A: Alignment,
 {
+    #[inline(always)]
     fn index_mut(&mut self, range: ops::Range<usize>) -> &mut Aligned<A, [T]> {
         Self::check_start_index(range.start);
         unsafe { &mut *(&mut self.value[range] as *mut [T] as *mut Aligned<A, [T]>) }
@@ -390,7 +398,7 @@ where
     }
 }
 
-impl<A, T> Debug for Aligned<A, T>
+impl<A, T: ?Sized> Debug for Aligned<A, T>
 where
     A: Alignment,
     T: Debug,
@@ -400,7 +408,7 @@ where
     }
 }
 
-impl<A, T> Display for Aligned<A, T>
+impl<A, T: ?Sized> Display for Aligned<A, T>
 where
     A: Alignment,
     T: Display,
@@ -410,7 +418,7 @@ where
     }
 }
 
-impl<A, T> PartialEq for Aligned<A, T>
+impl<A, T: ?Sized> PartialEq for Aligned<A, T>
 where
     A: Alignment,
     T: PartialEq,
@@ -420,14 +428,14 @@ where
     }
 }
 
-impl<A, T> Eq for Aligned<A, T>
+impl<A, T: ?Sized> Eq for Aligned<A, T>
 where
     A: Alignment,
     T: Eq,
 {
 }
 
-impl<A, T> Hash for Aligned<A, T>
+impl<A, T: ?Sized> Hash for Aligned<A, T>
 where
     A: Alignment,
     T: Hash,
@@ -437,7 +445,7 @@ where
     }
 }
 
-impl<A, T> Ord for Aligned<A, T>
+impl<A, T: ?Sized> Ord for Aligned<A, T>
 where
     A: Alignment,
     T: Ord,
@@ -447,7 +455,7 @@ where
     }
 }
 
-impl<A, T> PartialOrd for Aligned<A, T>
+impl<A, T: ?Sized> PartialOrd for Aligned<A, T>
 where
     A: Alignment,
     T: PartialOrd,
