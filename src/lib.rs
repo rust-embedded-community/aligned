@@ -155,6 +155,20 @@ where
     }
 }
 
+impl<A, T> Aligned<A, T>
+where
+    A: Alignment,
+{
+    /// Changes the alignment of value to be at least A bytes
+    pub const fn new(value: T) -> Self {
+        Aligned {
+            _alignment: [],
+            value,
+        }
+    }
+}
+
+
 impl<A, T> Aligned<A, [T]>
 where
     A: Alignment,
@@ -523,6 +537,16 @@ fn sanity() {
     let x: Aligned<A2, _> = Aligned([0u8; 3]);
     let y: &Aligned<A2, [u8]> = &x;
     let _: &[u8] = y;
+}
+
+#[test]
+fn test_type_alias_new() {
+    type CacheLineAligned<T> = Aligned<A64, T>;
+
+    let aligned: Aligned<A64, _> = Aligned([0u8; 3]);
+    let aligned_new = CacheLineAligned::new([0u8; 3]);
+
+    assert_eq!(aligned, aligned_new);
 }
 
 #[test]
