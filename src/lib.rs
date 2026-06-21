@@ -528,121 +528,177 @@ fn sanity() {
 #[test]
 fn test_range_to() {
     let a: &Aligned<A2, [u8]> = &Aligned::<A2, _>([0, 1, 2, 3]);
-    assert_eq!((&a[..0]).as_slice(), &[],);
-    assert_eq!((&a[..1]).as_slice(), &[0],);
-    assert_eq!((&a[..2]).as_slice(), &[0, 1],);
-    assert_eq!((&a[..3]).as_slice(), &[0, 1, 2],);
-    assert_eq!((&a[..4]).as_slice(), &[0, 1, 2, 3],);
+    assert_eq!(&a[..0] as &[u8], &[] as &[u8],);
+    assert_eq!(&a[..1] as &[u8], &[0u8],);
+    assert_eq!(&a[..2] as &[u8], &[0u8, 1],);
+    assert_eq!(&a[..3] as &[u8], &[0u8, 1, 2],);
+    assert_eq!(&a[..4] as &[u8], &[0u8, 1, 2, 3],);
 }
 
 #[test]
 fn test_range_to_mut() {
     let a: &mut Aligned<A2, [u8]> = &mut Aligned::<A2, _>([0, 1, 2, 3]);
-    assert_eq!((&mut a[..0]).as_slice(), &[],);
-    assert_eq!((&mut a[..1]).as_slice(), &[0],);
-    assert_eq!((&mut a[..2]).as_slice(), &[0, 1],);
-    assert_eq!((&mut a[..3]).as_slice(), &[0, 1, 2],);
-    assert_eq!((&mut a[..4]).as_slice(), &[0, 1, 2, 3],);
+    assert_eq!(
+        as_slice::AsSlice::as_slice(&mut a[..0] as &mut [u8]),
+        &[] as &[u8],
+    );
+    assert_eq!(
+        as_slice::AsSlice::as_slice(&mut a[..1] as &mut [u8]),
+        &[0u8],
+    );
+    assert_eq!(
+        as_slice::AsSlice::as_slice(&mut a[..2] as &mut [u8]),
+        &[0u8, 1],
+    );
+    assert_eq!(
+        as_slice::AsSlice::as_slice(&mut a[..3] as &mut [u8]),
+        &[0u8, 1, 2],
+    );
+    assert_eq!(
+        as_slice::AsSlice::as_slice(&mut a[..4] as &mut [u8]),
+        &[0u8, 1, 2, 3],
+    );
 }
 
 #[test]
 fn test_range_to_inclusive() {
     let a: &Aligned<A2, [u8]> = &Aligned::<A2, _>([0, 1, 2, 3]);
-    assert_eq!((&a[..=0]).as_slice(), &[0],);
-    assert_eq!((&a[..=1]).as_slice(), &[0, 1],);
-    assert_eq!((&a[..=2]).as_slice(), &[0, 1, 2],);
-    assert_eq!((&a[..=3]).as_slice(), &[0, 1, 2, 3],);
+    assert_eq!(as_slice::AsSlice::as_slice(&a[..=0] as &[u8]), &[0u8],);
+    assert_eq!(as_slice::AsSlice::as_slice(&a[..=1] as &[u8]), &[0u8, 1],);
+    assert_eq!(as_slice::AsSlice::as_slice(&a[..=2] as &[u8]), &[0u8, 1, 2],);
+    assert_eq!(
+        as_slice::AsSlice::as_slice(&a[..=3] as &[u8]),
+        &[0u8, 1, 2, 3],
+    );
 }
 
 #[test]
 fn test_range_to_inclusive_mut() {
     let a: &mut Aligned<A2, [u8]> = &mut Aligned::<A2, _>([0, 1, 2, 3]);
-    assert_eq!((&mut a[..=0]).as_slice(), &[0],);
-    assert_eq!((&mut a[..=1]).as_slice(), &[0, 1],);
-    assert_eq!((&mut a[..=2]).as_slice(), &[0, 1, 2],);
-    assert_eq!((&mut a[..=3]).as_slice(), &[0, 1, 2, 3],);
+    assert_eq!(
+        as_slice::AsSlice::as_slice(&mut a[..=0] as &mut [u8]),
+        &[0u8],
+    );
+    assert_eq!(
+        as_slice::AsSlice::as_slice(&mut a[..=1] as &mut [u8]),
+        &[0u8, 1],
+    );
+    assert_eq!(
+        as_slice::AsSlice::as_slice(&mut a[..=2] as &mut [u8]),
+        &[0u8, 1, 2],
+    );
+    assert_eq!(
+        as_slice::AsSlice::as_slice(&mut a[..=3] as &mut [u8]),
+        &[0u8, 1, 2, 3],
+    );
 }
 
 #[test]
 fn test_range_full() {
     let a: &Aligned<A2, [u8]> = &Aligned::<A2, _>([0, 1, 2, 3]);
-    assert_eq!((&a[..]).as_slice(), &[0, 1, 2, 3],);
+    assert_eq!(
+        as_slice::AsSlice::as_slice(&a[..] as &[u8]),
+        &[0u8, 1, 2, 3],
+    );
 }
 
 #[test]
 fn test_range_full_mut() {
     let a: &Aligned<A2, [u8]> = &Aligned::<A2, _>([0, 1, 2, 3]);
-    assert_eq!((&a[..]).as_slice(), &[0, 1, 2, 3],);
+    assert_eq!(
+        as_slice::AsSlice::as_slice(&a[..] as &[u8]),
+        &[0u8, 1, 2, 3],
+    );
 }
 
 #[test]
 fn test_range_from() {
     let a: &Aligned<A2, [u8]> = &Aligned::<A2, _>([0, 1, 2, 3]);
-    assert_eq!((&a[0..]).as_slice(), &[0, 1, 2, 3],);
-    assert_eq!((&a[2..]).as_slice(), &[2, 3],);
-    assert_eq!((&a[4..]).as_slice(), &[],);
+    assert_eq!(
+        as_slice::AsSlice::as_slice(&a[0..] as &[u8]),
+        &[0u8, 1, 2, 3],
+    );
+    assert_eq!(as_slice::AsSlice::as_slice(&a[2..] as &[u8]), &[2u8, 3],);
+    assert_eq!(as_slice::AsSlice::as_slice(&a[4..] as &[u8]), &[] as &[u8],);
 
     let a: &Aligned<A2, [u8]> = &Aligned::<A2, _>([0, 1, 2]);
-    assert_eq!((&a[0..]).as_slice(), &[0, 1, 2],);
-    assert_eq!((&a[2..]).as_slice(), &[2],);
+    assert_eq!(as_slice::AsSlice::as_slice(&a[0..] as &[u8]), &[0u8, 1, 2],);
+    assert_eq!(as_slice::AsSlice::as_slice(&a[2..] as &[u8]), &[2u8],);
 
     let a: &Aligned<A4, [u8]> = &Aligned::<A4, _>([0, 1, 2, 3, 4, 5, 6, 7]);
-    assert_eq!((&a[0..]).as_slice(), &[0, 1, 2, 3, 4, 5, 6, 7],);
-    assert_eq!((&a[4..]).as_slice(), &[4, 5, 6, 7],);
-    assert_eq!((&a[8..]).as_slice(), &[],);
+    assert_eq!(
+        as_slice::AsSlice::as_slice(&a[0..] as &[u8]),
+        &[0u8, 1, 2, 3, 4, 5, 6, 7],
+    );
+    assert_eq!(
+        as_slice::AsSlice::as_slice(&a[4..] as &[u8]),
+        &[4u8, 5, 6, 7],
+    );
+    assert_eq!(as_slice::AsSlice::as_slice(&a[8..] as &[u8]), &[] as &[u8],);
 
     let a: &Aligned<A4, [u8]> = &Aligned::<A4, _>([0, 1, 2, 3, 4, 5, 6]);
-    assert_eq!((&a[0..]).as_slice(), &[0, 1, 2, 3, 4, 5, 6],);
-    assert_eq!((&a[4..]).as_slice(), &[4, 5, 6],);
+    assert_eq!(
+        as_slice::AsSlice::as_slice(&a[0..] as &[u8]),
+        &[0u8, 1, 2, 3, 4, 5, 6],
+    );
+    assert_eq!(as_slice::AsSlice::as_slice(&a[4..] as &[u8]), &[4u8, 5, 6],);
 
     let a: &Aligned<A8, [u8]> =
         &Aligned::<A8, _>([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]);
     assert_eq!(
-        (&a[0..]).as_slice(),
-        &[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15],
+        as_slice::AsSlice::as_slice(&a[0..] as &[u8]),
+        &[0u8, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15],
     );
-    assert_eq!((&a[8..]).as_slice(), &[8, 9, 10, 11, 12, 13, 14, 15],);
-    assert_eq!((&a[16..]).as_slice(), &[],);
+    assert_eq!(
+        as_slice::AsSlice::as_slice(&a[8..] as &[u8]),
+        &[8u8, 9, 10, 11, 12, 13, 14, 15],
+    );
+    assert_eq!(as_slice::AsSlice::as_slice(&a[16..] as &[u8]), &[] as &[u8],);
 
     let a: &Aligned<A8, [u8]> =
         &Aligned::<A8, _>([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14]);
     assert_eq!(
-        (&a[0..]).as_slice(),
-        &[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14],
+        as_slice::AsSlice::as_slice(&a[0..] as &[u8]),
+        &[0u8, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14],
     );
-    assert_eq!((&a[8..]).as_slice(), &[8, 9, 10, 11, 12, 13, 14],);
+    assert_eq!(
+        as_slice::AsSlice::as_slice(&a[8..] as &[u8]),
+        &[8u8, 9, 10, 11, 12, 13, 14],
+    );
 
     let a: &Aligned<A16, [u8]> = &Aligned::<A16, _>([
         0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24,
         25, 26, 27, 28, 29, 30, 31,
     ]);
     assert_eq!(
-        (&a[0..]).as_slice(),
+        as_slice::AsSlice::as_slice(&a[0..] as &[u8]),
         &[
-            0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23,
+            0u8, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23,
             24, 25, 26, 27, 28, 29, 30, 31
         ],
     );
     assert_eq!(
-        (&a[16..]).as_slice(),
-        &[16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31],
+        as_slice::AsSlice::as_slice(&a[16..] as &[u8]),
+        &[
+            16u8, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31
+        ],
     );
-    assert_eq!((&a[32..]).as_slice(), &[],);
+    assert_eq!(as_slice::AsSlice::as_slice(&a[32..] as &[u8]), &[] as &[u8],);
 
     let a: &Aligned<A16, [u8]> = &Aligned::<A16, _>([
         0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24,
         25, 26, 27, 28, 29, 30,
     ]);
     assert_eq!(
-        (&a[0..]).as_slice(),
+        as_slice::AsSlice::as_slice(&a[0..] as &[u8]),
         &[
-            0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23,
+            0u8, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23,
             24, 25, 26, 27, 28, 29, 30
         ],
     );
     assert_eq!(
-        (&a[16..]).as_slice(),
-        &[16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30],
+        as_slice::AsSlice::as_slice(&a[16..] as &[u8]),
+        &[16u8, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30],
     );
 
     let a: &Aligned<A32, [u8]> = &Aligned::<A32, _>([
@@ -651,21 +707,21 @@ fn test_range_from() {
         48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63,
     ]);
     assert_eq!(
-        (&a[0..]).as_slice(),
+        as_slice::AsSlice::as_slice(&a[0..] as &[u8]),
         &[
-            0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23,
+            0u8, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23,
             24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45,
             46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63
         ]
     );
     assert_eq!(
-        (&a[32..]).as_slice(),
+        as_slice::AsSlice::as_slice(&a[32..] as &[u8]),
         &[
-            32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53,
-            54, 55, 56, 57, 58, 59, 60, 61, 62, 63
+            32u8, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52,
+            53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63
         ]
     );
-    assert_eq!((&a[64..]).as_slice(), &[],);
+    assert_eq!(as_slice::AsSlice::as_slice(&a[64..] as &[u8]), &[],);
 
     let a: &Aligned<A32, [u8]> = &Aligned::<A32, _>([
         0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24,
@@ -673,18 +729,18 @@ fn test_range_from() {
         48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62,
     ]);
     assert_eq!(
-        (&a[0..]).as_slice(),
+        as_slice::AsSlice::as_slice(&a[0..] as &[u8]),
         &[
-            0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23,
+            0u8, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23,
             24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45,
             46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62
         ]
     );
     assert_eq!(
-        (&a[32..]).as_slice(),
+        as_slice::AsSlice::as_slice(&a[32..] as &[u8]),
         &[
-            32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53,
-            54, 55, 56, 57, 58, 59, 60, 61, 62
+            32u8, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52,
+            53, 54, 55, 56, 57, 58, 59, 60, 61, 62
         ]
     );
 
@@ -697,9 +753,9 @@ fn test_range_from() {
         113, 114, 115, 116, 117, 118, 119, 120, 121, 122, 123, 124, 125, 126, 127,
     ]);
     assert_eq!(
-        (&a[0..]).as_slice(),
+        as_slice::AsSlice::as_slice(&a[0..] as &[u8]),
         &[
-            0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23,
+            0u8, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23,
             24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45,
             46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64, 65, 66, 67,
             68, 69, 70, 71, 72, 73, 74, 75, 76, 77, 78, 79, 80, 81, 82, 83, 84, 85, 86, 87, 88, 89,
@@ -709,15 +765,15 @@ fn test_range_from() {
         ]
     );
     assert_eq!(
-        (&a[64..]).as_slice(),
+        as_slice::AsSlice::as_slice(&a[64..] as &[u8]),
         &[
-            64, 65, 66, 67, 68, 69, 70, 71, 72, 73, 74, 75, 76, 77, 78, 79, 80, 81, 82, 83, 84, 85,
-            86, 87, 88, 89, 90, 91, 92, 93, 94, 95, 96, 97, 98, 99, 100, 101, 102, 103, 104, 105,
-            106, 107, 108, 109, 110, 111, 112, 113, 114, 115, 116, 117, 118, 119, 120, 121, 122,
-            123, 124, 125, 126, 127
+            64u8, 65, 66, 67, 68, 69, 70, 71, 72, 73, 74, 75, 76, 77, 78, 79, 80, 81, 82, 83, 84,
+            85, 86, 87, 88, 89, 90, 91, 92, 93, 94, 95, 96, 97, 98, 99, 100, 101, 102, 103, 104,
+            105, 106, 107, 108, 109, 110, 111, 112, 113, 114, 115, 116, 117, 118, 119, 120, 121,
+            122, 123, 124, 125, 126, 127
         ]
     );
-    assert_eq!((&a[128..]).as_slice(), &[]);
+    assert_eq!(as_slice::AsSlice::as_slice(&a[128..] as &[u8]), &[]);
 
     let a: &Aligned<A64, [u8]> = &Aligned::<A64, _>([
         0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24,
@@ -728,9 +784,9 @@ fn test_range_from() {
         113, 114, 115, 116, 117, 118, 119, 120, 121, 122, 123, 124, 125, 126,
     ]);
     assert_eq!(
-        (&a[0..]).as_slice(),
+        as_slice::AsSlice::as_slice(&a[0..] as &[u8]),
         &[
-            0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23,
+            0u8, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23,
             24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45,
             46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64, 65, 66, 67,
             68, 69, 70, 71, 72, 73, 74, 75, 76, 77, 78, 79, 80, 81, 82, 83, 84, 85, 86, 87, 88, 89,
@@ -740,12 +796,12 @@ fn test_range_from() {
         ]
     );
     assert_eq!(
-        (&a[64..]).as_slice(),
+        as_slice::AsSlice::as_slice(&a[64..] as &[u8]),
         &[
-            64, 65, 66, 67, 68, 69, 70, 71, 72, 73, 74, 75, 76, 77, 78, 79, 80, 81, 82, 83, 84, 85,
-            86, 87, 88, 89, 90, 91, 92, 93, 94, 95, 96, 97, 98, 99, 100, 101, 102, 103, 104, 105,
-            106, 107, 108, 109, 110, 111, 112, 113, 114, 115, 116, 117, 118, 119, 120, 121, 122,
-            123, 124, 125, 126
+            64u8, 65, 66, 67, 68, 69, 70, 71, 72, 73, 74, 75, 76, 77, 78, 79, 80, 81, 82, 83, 84,
+            85, 86, 87, 88, 89, 90, 91, 92, 93, 94, 95, 96, 97, 98, 99, 100, 101, 102, 103, 104,
+            105, 106, 107, 108, 109, 110, 111, 112, 113, 114, 115, 116, 117, 118, 119, 120, 121,
+            122, 123, 124, 125, 126
         ]
     );
 }
@@ -767,13 +823,25 @@ fn test_range_from_a4_invalid_alignment() {
 #[test]
 fn test_range_from_mut() {
     let a: &mut Aligned<A2, [u8]> = &mut Aligned::<A2, _>([0, 1, 2, 3]);
-    assert_eq!((&mut a[0..]).as_slice(), &[0, 1, 2, 3],);
-    assert_eq!((&mut a[2..]).as_slice(), &[2, 3],);
-    assert_eq!((&mut a[4..]).as_slice(), &[],);
+    assert_eq!(
+        as_slice::AsSlice::as_slice(&mut a[0..] as &mut [u8]),
+        &[0u8, 1, 2, 3],
+    );
+    assert_eq!(
+        as_slice::AsSlice::as_slice(&mut a[2..] as &mut [u8]),
+        &[2u8, 3],
+    );
+    assert_eq!(
+        as_slice::AsSlice::as_slice(&mut a[4..] as &mut [u8]),
+        &[] as &[u8],
+    );
 
     let a: &mut Aligned<A2, [u8]> = &mut Aligned::<A2, _>([0, 1, 2]);
-    assert_eq!((&mut a[0..]).as_slice(), &[0, 1, 2],);
-    assert_eq!((&mut a[2..]).as_slice(), &[2],);
+    assert_eq!(
+        as_slice::AsSlice::as_slice(&mut a[0..] as &mut [u8]),
+        &[0u8, 1, 2],
+    );
+    assert_eq!(as_slice::AsSlice::as_slice(&mut a[2..] as &mut [u8]), &[2],);
 }
 
 #[test]
@@ -786,15 +854,18 @@ fn test_range_from_mut_invalid_argument() {
 #[test]
 fn test_range() {
     let a: &Aligned<A2, [u8]> = &Aligned::<A2, _>([0, 1, 2, 3]);
-    assert_eq!((&a[0..0]).as_slice(), &[],);
-    assert_eq!((&a[0..1]).as_slice(), &[0],);
-    assert_eq!((&a[0..2]).as_slice(), &[0, 1],);
-    assert_eq!((&a[0..3]).as_slice(), &[0, 1, 2],);
-    assert_eq!((&a[0..4]).as_slice(), &[0, 1, 2, 3],);
-    assert_eq!((&a[2..2]).as_slice(), &[],);
-    assert_eq!((&a[2..3]).as_slice(), &[2],);
-    assert_eq!((&a[2..4]).as_slice(), &[2, 3],);
-    assert_eq!((&a[4..4]).as_slice(), &[],);
+    assert_eq!(as_slice::AsSlice::as_slice(&a[0..0] as &[u8]), &[] as &[u8],);
+    assert_eq!(as_slice::AsSlice::as_slice(&a[0..1] as &[u8]), &[0u8],);
+    assert_eq!(as_slice::AsSlice::as_slice(&a[0..2] as &[u8]), &[0u8, 1],);
+    assert_eq!(as_slice::AsSlice::as_slice(&a[0..3] as &[u8]), &[0u8, 1, 2],);
+    assert_eq!(
+        as_slice::AsSlice::as_slice(&a[0..4] as &[u8]),
+        &[0u8, 1, 2, 3],
+    );
+    assert_eq!(as_slice::AsSlice::as_slice(&a[2..2] as &[u8]), &[] as &[u8],);
+    assert_eq!(as_slice::AsSlice::as_slice(&a[2..3] as &[u8]), &[2u8],);
+    assert_eq!(as_slice::AsSlice::as_slice(&a[2..4] as &[u8]), &[2u8, 3],);
+    assert_eq!(as_slice::AsSlice::as_slice(&a[4..4] as &[u8]), &[] as &[u8],);
 }
 
 #[test]
@@ -807,15 +878,42 @@ fn test_range_invalid_alignment() {
 #[test]
 fn test_range_mut() {
     let a: &mut Aligned<A2, [u8]> = &mut Aligned::<A2, _>([0, 1, 2, 3]);
-    assert_eq!((&mut a[0..0]).as_slice(), &[],);
-    assert_eq!((&mut a[0..1]).as_slice(), &[0],);
-    assert_eq!((&mut a[0..2]).as_slice(), &[0, 1],);
-    assert_eq!((&mut a[0..3]).as_slice(), &[0, 1, 2],);
-    assert_eq!((&mut a[0..4]).as_slice(), &[0, 1, 2, 3],);
-    assert_eq!((&mut a[2..2]).as_slice(), &[],);
-    assert_eq!((&mut a[2..3]).as_slice(), &[2],);
-    assert_eq!((&mut a[2..4]).as_slice(), &[2, 3],);
-    assert_eq!((&mut a[4..4]).as_slice(), &[],);
+    assert_eq!(
+        as_slice::AsSlice::as_slice(&mut a[0..0] as &mut [u8]),
+        &[] as &[u8],
+    );
+    assert_eq!(
+        as_slice::AsSlice::as_slice(&mut a[0..1] as &mut [u8]),
+        &[0u8],
+    );
+    assert_eq!(
+        as_slice::AsSlice::as_slice(&mut a[0..2] as &mut [u8]),
+        &[0u8, 1],
+    );
+    assert_eq!(
+        as_slice::AsSlice::as_slice(&mut a[0..3] as &mut [u8]),
+        &[0u8, 1, 2],
+    );
+    assert_eq!(
+        as_slice::AsSlice::as_slice(&mut a[0..4] as &mut [u8]),
+        &[0u8, 1, 2, 3],
+    );
+    assert_eq!(
+        as_slice::AsSlice::as_slice(&mut a[2..2] as &mut [u8]),
+        &[] as &[u8],
+    );
+    assert_eq!(
+        as_slice::AsSlice::as_slice(&mut a[2..3] as &mut [u8]),
+        &[2u8],
+    );
+    assert_eq!(
+        as_slice::AsSlice::as_slice(&mut a[2..4] as &mut [u8]),
+        &[2u8, 3],
+    );
+    assert_eq!(
+        as_slice::AsSlice::as_slice(&mut a[4..4] as &mut [u8]),
+        &[] as &[u8],
+    );
 }
 
 #[test]
@@ -828,12 +926,18 @@ fn test_range_mut_invalid_alignment() {
 #[test]
 fn test_range_inclusive() {
     let a: &Aligned<A2, [u8]> = &Aligned::<A2, _>([0, 1, 2, 3]);
-    assert_eq!((&a[0..=0]).as_slice(), &[0],);
-    assert_eq!((&a[0..=1]).as_slice(), &[0, 1],);
-    assert_eq!((&a[0..=2]).as_slice(), &[0, 1, 2],);
-    assert_eq!((&a[0..=3]).as_slice(), &[0, 1, 2, 3],);
-    assert_eq!((&a[2..=2]).as_slice(), &[2],);
-    assert_eq!((&a[2..=3]).as_slice(), &[2, 3],);
+    assert_eq!(as_slice::AsSlice::as_slice(&a[0..=0] as &[u8]), &[0u8],);
+    assert_eq!(as_slice::AsSlice::as_slice(&a[0..=1] as &[u8]), &[0u8, 1],);
+    assert_eq!(
+        as_slice::AsSlice::as_slice(&a[0..=2] as &[u8]),
+        &[0u8, 1, 2],
+    );
+    assert_eq!(
+        as_slice::AsSlice::as_slice(&a[0..=3] as &[u8]),
+        &[0u8, 1, 2, 3],
+    );
+    assert_eq!(as_slice::AsSlice::as_slice(&a[2..=2] as &[u8]), &[2u8],);
+    assert_eq!(as_slice::AsSlice::as_slice(&a[2..=3] as &[u8]), &[2u8, 3],);
 }
 
 #[test]
@@ -846,12 +950,30 @@ fn test_range_inclusive_invalid_alignment() {
 #[test]
 fn test_range_inclusive_mut() {
     let a: &mut Aligned<A2, [u8]> = &mut Aligned::<A2, _>([0, 1, 2, 3]);
-    assert_eq!((&mut a[0..=0]).as_slice(), &[0],);
-    assert_eq!((&mut a[0..=1]).as_slice(), &[0, 1],);
-    assert_eq!((&mut a[0..=2]).as_slice(), &[0, 1, 2],);
-    assert_eq!((&mut a[0..=3]).as_slice(), &[0, 1, 2, 3],);
-    assert_eq!((&mut a[2..=2]).as_slice(), &[2],);
-    assert_eq!((&mut a[2..=3]).as_slice(), &[2, 3],);
+    assert_eq!(
+        as_slice::AsSlice::as_slice(&mut a[0..=0] as &mut [u8]),
+        &[0u8],
+    );
+    assert_eq!(
+        as_slice::AsSlice::as_slice(&mut a[0..=1] as &mut [u8]),
+        &[0u8, 1],
+    );
+    assert_eq!(
+        as_slice::AsSlice::as_slice(&mut a[0..=2] as &mut [u8]),
+        &[0u8, 1, 2],
+    );
+    assert_eq!(
+        as_slice::AsSlice::as_slice(&mut a[0..=3] as &mut [u8]),
+        &[0u8, 1, 2, 3],
+    );
+    assert_eq!(
+        as_slice::AsSlice::as_slice(&mut a[2..=2] as &mut [u8]),
+        &[2u8],
+    );
+    assert_eq!(
+        as_slice::AsSlice::as_slice(&mut a[2..=3] as &mut [u8]),
+        &[2u8, 3],
+    );
 }
 
 #[test]
