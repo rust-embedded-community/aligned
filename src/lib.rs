@@ -457,6 +457,58 @@ where
     }
 }
 
+impl<A, T, U> FromIterator<U> for Aligned<A, T>
+where
+    A: Alignment,
+    T: FromIterator<U>,
+{
+    fn from_iter<I: IntoIterator<Item = U>>(iter: I) -> Self {
+        Self {
+            _alignment: [],
+            value: T::from_iter(iter),
+        }
+    }
+}
+
+impl<A, T> IntoIterator for Aligned<A, T>
+where
+    A: Alignment,
+    T: IntoIterator,
+{
+    type IntoIter = T::IntoIter;
+    type Item = T::Item;
+
+    fn into_iter(self) -> Self::IntoIter {
+        self.value.into_iter()
+    }
+}
+
+impl<'a, A, T> IntoIterator for &'a Aligned<A, T>
+where
+    A: Alignment,
+    &'a T: IntoIterator,
+{
+    type IntoIter = <&'a T as IntoIterator>::IntoIter;
+    type Item = <&'a T as IntoIterator>::Item;
+
+    fn into_iter(self) -> Self::IntoIter {
+        (&self.value).into_iter()
+    }
+}
+
+impl<'a, A, T> IntoIterator for &'a mut Aligned<A, T>
+where
+    A: Alignment,
+    &'a mut T: IntoIterator,
+{
+    type IntoIter = <&'a mut T as IntoIterator>::IntoIter;
+    type Item = <&'a mut T as IntoIterator>::Item;
+
+    fn into_iter(self) -> Self::IntoIter {
+        (&mut self.value).into_iter()
+    }
+}
+
 #[test]
 fn sanity() {
     use core::mem;
