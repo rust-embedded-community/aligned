@@ -306,6 +306,42 @@ where
     }
 }
 
+impl<A, T, const N: usize> AsRef<Aligned<A, [T]>> for Aligned<A, [T; N]>
+where
+    A: Alignment,
+{
+    fn as_ref(&self) -> &Aligned<A, [T]> {
+        self
+    }
+}
+
+impl<A, T, const N: usize> AsMut<Aligned<A, [T]>> for Aligned<A, [T; N]>
+where
+    A: Alignment,
+{
+    fn as_mut(&mut self) -> &mut Aligned<A, [T]> {
+        self
+    }
+}
+
+impl<A, T, const N: usize> AsRef<[T]> for Aligned<A, [T; N]>
+where
+    A: Alignment,
+{
+    fn as_ref(&self) -> &[T] {
+        &self.value[..]
+    }
+}
+
+impl<A, T, const N: usize> AsMut<[T]> for Aligned<A, [T; N]>
+where
+    A: Alignment,
+{
+    fn as_mut(&mut self) -> &mut [T] {
+        &mut self.value[..]
+    }
+}
+
 impl<A, T> AsSlice for Aligned<A, T>
 where
     A: Alignment,
@@ -1004,4 +1040,19 @@ fn test_from() {
     let a: Aligned<A4, _> = [1, 2, 3].into();
     assert_eq!(*a, [1, 2, 3]);
     assert_eq!(core::mem::align_of_val(&a), 4);
+}
+
+#[test]
+fn array_as_ref() {
+    let array = Aligned::<A4, _>([1, 2, 3]);
+    let slice: &[u8] = array.as_ref();
+    assert_eq!(slice.as_ptr(), array.as_ptr());
+}
+
+#[test]
+fn array_as_mut() {
+    let mut array = Aligned::<A4, _>([1, 2, 3]);
+    let slice: &mut [u8] = array.as_mut();
+    slice[0] = 4;
+    assert_eq!(slice.as_ptr(), array.as_ptr());
 }
