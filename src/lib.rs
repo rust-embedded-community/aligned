@@ -133,6 +133,15 @@ pub const fn Aligned<A, T>(value: T) -> Aligned<A, T> {
     }
 }
 
+impl<A, T> From<T> for Aligned<A, T>
+where
+    A: Alignment,
+{
+    fn from(value: T) -> Self {
+        Aligned(value)
+    }
+}
+
 impl<A, T> ops::Deref for Aligned<A, T>
 where
     A: Alignment,
@@ -988,4 +997,11 @@ fn test_range_inclusive_mut_invalid_alignment() {
 fn test_range_from_out_of_bounds() {
     let a: &Aligned<A2, [u8]> = &Aligned::<A2, _>([0u8; 4]);
     let _ = &a[6..];
+}
+
+#[test]
+fn test_from() {
+    let a: Aligned<A4, _> = [1, 2, 3].into();
+    assert_eq!(*a, [1, 2, 3]);
+    assert_eq!(core::mem::align_of_val(&a), 4);
 }
