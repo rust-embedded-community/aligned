@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [Unreleased]
+
+### Added
+
+- `From<T>` for `Aligned<A, T>`.
+- `AsRef` and `AsMut` implementations for `Aligned<A, [T; N]>`.
+
 ## [v0.4.3] - 2025-12-14
 
 ### Added
@@ -108,7 +115,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 - Initial release
 
-[Unreleased]: https://github.com/japaric/aligned/compare/v0.4.1...HEAD
+[Unreleased]: https://github.com/japaric/aligned/compare/v0.4.3...HEAD
 [v0.4.1]: https://github.com/japaric/aligned/compare/v0.4.0...v0.4.1
 [v0.4.0]: https://github.com/japaric/aligned/compare/v0.3.5...v0.4.0
 [v0.3.5]: https://github.com/japaric/aligned/compare/v0.3.4...v0.3.5
