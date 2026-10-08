@@ -10,10 +10,51 @@ env:
   RUSTFLAGS: '--deny warnings'
 
 jobs:
-  test:
-    name: cargo test
+  ci-linux:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        rust: [stable]
+
+        TARGET: [x86_64-unknown-linux-gnu, thumbv6m-none-eabi, thumbv7m-none-eabi]
+
+        include:
+          # Test MSRV
+          - rust: 1.85.0
+            TARGET: x86_64-unknown-linux-gnu
+
+          # Test nightly but don't fail
+          - rust: nightly
+            experimental: true
+            TARGET: x86_64-unknown-linux-gnu
+
+    steps:
+      - uses: actions/checkout@v7
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          toolchain: ${{ matrix.rust }}
+          target: ${{ matrix.TARGET }}
+
+      - run: cargo build --target=${{ matrix.TARGET }}
+
+      - run: cargo test --target=${{ matrix.TARGET }}
+        if: ${{ contains(matrix.TARGET, 'x86_64') }}
+
+  clippy:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7
       - uses: dtolnay/rust-toolchain@stable
-      - run: cargo test
+        with:
+          toolchain: 1.89.0
+          components: clippy
+
+      - run: cargo clippy
+
+  fmt:
+    name: Rustfmt
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: dtolnay/rust-toolchain@stable
+      - run: cargo fmt --all -- --check
