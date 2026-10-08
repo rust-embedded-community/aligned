@@ -6,6 +6,9 @@ on:
   pull_request: # Run CI for PRs on any branch
   merge_group: # Run CI for the GitHub merge queue
 
+env:
+  RUSTFLAGS: '--deny warnings'
+
 jobs:
   test:
     name: cargo test

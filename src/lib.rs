@@ -26,7 +26,6 @@
 //! ```
 
 #![deny(missing_docs)]
-#![deny(warnings)]
 #![cfg_attr(not(test), no_std)]
 
 use core::{
