@@ -163,6 +163,50 @@ where
     }
 }
 
+impl<A, T, I, const N: usize> ops::Index<I> for Aligned<A, [T; N]>
+where
+    A: Alignment,
+    Aligned<A, [T]>: ops::Index<I>,
+{
+    type Output = <Aligned<A, [T]> as ops::Index<I>>::Output;
+
+    fn index(&self, index: I) -> &Self::Output {
+        let slice: &Aligned<A, [T]> = self;
+        &slice[index]
+    }
+}
+
+impl<A, T, I, const N: usize> ops::IndexMut<I> for Aligned<A, [T; N]>
+where
+    A: Alignment,
+    Aligned<A, [T]>: ops::IndexMut<I>,
+{
+    fn index_mut(&mut self, index: I) -> &mut Self::Output {
+        let slice: &mut Aligned<A, [T]> = self;
+        &mut slice[index]
+    }
+}
+
+impl<A, T> ops::Index<usize> for Aligned<A, [T]>
+where
+    A: Alignment,
+{
+    type Output = T;
+
+    fn index(&self, index: usize) -> &T {
+        &self.value[index]
+    }
+}
+
+impl<A, T> ops::IndexMut<usize> for Aligned<A, [T]>
+where
+    A: Alignment,
+{
+    fn index_mut(&mut self, index: usize) -> &mut T {
+        &mut self.value[index]
+    }
+}
+
 impl<A, T> Aligned<A, [T]>
 where
     A: Alignment,
@@ -1054,4 +1098,25 @@ fn array_as_mut() {
     let slice: &mut [u8] = array.as_mut();
     slice[0] = 4;
     assert_eq!(slice.as_ptr(), array.as_ptr());
+}
+
+#[test]
+fn array_indexing() {
+    let array: Aligned<A4, _> = Aligned([0u8, 1, 2, 3]);
+    let slice: &Aligned<A4, [u8]> = &array[..2];
+
+    assert_eq!(&**slice, &[0, 1]);
+    assert_eq!(slice.as_ptr(), array.as_ptr());
+    assert_eq!(array[1], 1);
+}
+
+#[test]
+fn array_indexing_mut() {
+    let mut array: Aligned<A4, _> = Aligned([0u8, 1, 2, 3]);
+    let slice: &mut Aligned<A4, [u8]> = &mut array[..2];
+    slice.copy_from_slice(&[4, 5]);
+
+    assert_eq!(*array, [4, 5, 2, 3]);
+    array[1] = 6;
+    assert_eq!(array[1], 6);
 }
