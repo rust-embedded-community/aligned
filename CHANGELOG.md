@@ -9,6 +9,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 - `From<T>` for `Aligned<A, T>`.
 - `AsRef` and `AsMut` implementations for `Aligned<A, [T; N]>`.
+- Range indexing for `Aligned<A, [T; N]>` that preserves alignment.
 
 ## [v0.4.3] - 2025-12-14
 
